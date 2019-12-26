@@ -1,7 +1,7 @@
 import sys
 import parserDescription
 import requests
-
+import json
 
 base_url='http://httpbin.org/'
 
@@ -14,11 +14,12 @@ def getRequest():
         print(response.text)
     elif namespace.ip:
         response = requests.get(base_url + '/ip')
-        print(response.text)
+        jsoncode = json.loads(response.text)
+        print(jsoncode['origin'])
     elif namespace.useragent:
         response = requests.get(base_url + '/user-agent')
-        print(response.text)
-
+        jsoncode = json.loads(response.text)
+        print(jsoncode['user-agent'])
 
 def postRequest():
     if namespace.header:
@@ -35,3 +36,9 @@ def putRequest():
     elif namespace.anything:
         response = requests.put(base_url + '/anything')
         print(response.text)
+
+def deleteRequest():
+    if namespace.delete:
+        response = requests.delete(base_url + '/delete')
+        jsoncode = json.loads(response.text)
+        print(jsoncode['url'])

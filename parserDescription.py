@@ -15,6 +15,7 @@ def createParser():
     get_parser.add_argument('--useragent', dest='useragent', help='The request’s User-Agent header', action='store_true' ,default=False)
 
 
+
     post_parser = requests_parser.add_parser('post', help='The request’s POST parameters')
     post_parser.add_argument('--header', dest='header', help='Response headers')
     post_parser.add_argument('--delay', dest='delay', help='A delayed response. 10 sec max')
@@ -32,7 +33,7 @@ def createParser():
 
 
     delete_parser = requests_parser.add_parser('delete', help='The request’s DELETE parameters')
-    delete_parser.add_argument('--delete')
+    delete_parser.add_argument('--delete', dest='delete', help='The request’s DELETE parameters', action='store_true' ,default=False)
 
 
     return root_parser
