@@ -22,5 +22,16 @@ def getRequest():
 
 def postRequest():
     if namespace.header:
-        response = requests.post(base_url + '/response-headers?freeform=')
+        response = requests.post(base_url + '/response-headers?freeform=' + namespace.header)
+        print(response.text)
+    elif namespace.delay:
+        response = requests.post(base_url + '/delay/' + namespace.delay)
+        print(response.text)
+
+def putRequest():
+    if namespace.status:
+        response = requests.put(base_url + '/status/' + namespace.status)
+        print(response.text)
+    elif namespace.anything:
+        response = requests.put(base_url + '/anything')
         print(response.text)

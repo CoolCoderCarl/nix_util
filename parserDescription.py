@@ -17,11 +17,17 @@ def createParser():
 
     post_parser = requests_parser.add_parser('post', help='The request’s POST parameters')
     post_parser.add_argument('--header', dest='header', help='Response headers')
+    post_parser.add_argument('--delay', dest='delay', help='A delayed response. 10 sec max')
 
 
 
     put_parser = requests_parser.add_parser('put', help='The request’s PUT parameters')
-    put_parser.add_argument('--put')
+    put_parser.add_argument('--status', dest='status', help='''100 Informational responses\n
+                                                               200 Success\n
+                                                               300 Redirection\n
+                                                               400 Client Errors\n
+                                                               500 Server Errors\n''')
+    put_parser.add_argument('--anything', dest='anything', help='Anything passed in request', action='store_true' ,default=False)
 
 
 
