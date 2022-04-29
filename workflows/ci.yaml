@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  code_quality:
+    runs-on: ubuntu-latest
+    name: Checks with black, isort
+    container: python:3.9
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run script
+        run: |
+          pip install -r requirements.txt
+          ls -la
+
+      - name: Black check
+        run:
+          black --check .
+
+      - name: Isort check
+        run:
+          isort --check .
+
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ 'windows-latest', 'ubuntu-latest' ]
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - run: pip install -r requirements.txt pyinstaller
+    - run: python3.7 -m PyInstaller --workpath /tmp/build --specpath /tmp -F utility.py
+    - ./dist/your-code/your-code
+    - uses: actions/upload-artifact@v2
+      with:
+        path: dist/*

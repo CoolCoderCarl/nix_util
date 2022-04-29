@@ -1,44 +1,52 @@
-import sys
-import parserDescription
-import requests
 import json
+import sys
 
-base_url='http://httpbin.org/'
+import requests
 
-main_parser = parserDescription.createParser()
+import parser_description
+
+base_url = "http://httpbin.org/"
+
+main_parser = parser_description.create_parser()
 namespace = main_parser.parse_args(sys.argv[1:])
 
-def getRequest():
+
+def get_request():
     if namespace.header:
-        response = requests.get(base_url + '/headers')
+        response = requests.get(base_url + "/headers")
         print(response.text)
     elif namespace.ip:
-        response = requests.get(base_url + '/ip')
-        jsoncode = json.loads(response.text)
-        print(jsoncode['origin'])
+        response = requests.get(base_url + "/ip")
+        json_code = json.loads(response.text)
+        print(json_code["origin"])
     elif namespace.useragent:
-        response = requests.get(base_url + '/user-agent')
-        jsoncode = json.loads(response.text)
-        print(jsoncode['user-agent'])
+        response = requests.get(base_url + "/user-agent")
+        json_code = json.loads(response.text)
+        print(json_code["user-agent"])
 
-def postRequest():
+
+def post_request():
     if namespace.header:
-        response = requests.post(base_url + '/response-headers?freeform=' + namespace.header)
+        response = requests.post(
+            base_url + "/response-headers?freeform=" + namespace.header
+        )
         print(response.text)
     elif namespace.delay:
-        response = requests.post(base_url + '/delay/' + namespace.delay)
+        response = requests.post(base_url + "/delay/" + namespace.delay)
         print(response.text)
 
-def putRequest():
+
+def put_request():
     if namespace.status:
-        response = requests.put(base_url + '/status/' + namespace.status)
+        response = requests.put(base_url + "/status/" + namespace.status)
         print(response.text)
     elif namespace.anything:
-        response = requests.put(base_url + '/anything')
+        response = requests.put(base_url + "/anything")
         print(response.text)
 
-def deleteRequest():
+
+def delete_request():
     if namespace.delete:
-        response = requests.delete(base_url + '/delete')
-        jsoncode = json.loads(response.text)
-        print(jsoncode['url'])
+        response = requests.delete(base_url + "/delete")
+        json_code = json.loads(response.text)
+        print(json_code["url"])

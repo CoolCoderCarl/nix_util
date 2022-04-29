@@ -1,13 +1,12 @@
 import methods
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     if methods.namespace.request == "get":
-        methods.getRequest()
+        methods.get_request()
     elif methods.namespace.request == "post":
-        methods.postRequest()
+        methods.post_request()
     elif methods.namespace.request == "put":
-        methods.putRequest()
+        methods.put_request()
     elif methods.namespace.request == "delete":
-        methods.deleteRequest()
+        methods.delete_request()
