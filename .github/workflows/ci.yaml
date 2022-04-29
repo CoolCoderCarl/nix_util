@@ -82,11 +82,6 @@ jobs:
       - name: Build with pyinstaller for ${{ matrix.TARGET }}
         run: ${{ matrix.CMD_BUILD }}
 
-      - name: Load Release URL File from release job
-        uses: actions/download-artifact@v1
-        with:
-          name: release_url
-
       - name: Get Release File Name & Upload URL
         id: get_release_info
         shell: bash
