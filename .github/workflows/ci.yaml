@@ -49,15 +49,6 @@ jobs:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           release_name: Release ${{ steps.tag_version.outputs.new_tag }}
 
-      - name: Output Release URL File
-        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
-
-      - name: Save Release URL File for publish
-        uses: actions/upload-artifact@v1
-        with:
-          name: release_url
-          path: release_url.txt
-
   build:
     name: Build packages
     needs: createrelease
@@ -69,6 +60,11 @@ jobs:
             TARGET: windows
             CMD_BUILD: python -m PyInstaller --workpath /tmp/build --specpath /tmp -F utility.py
             OUT_FILE_NAME: utility.exe
+            ASSET_MIME: application/vnd.microsoft.portable-executable
+          - os: ubuntu-latest
+            TARGET: ubuntu
+            CMD_BUILD: python -m PyInstaller --workpath /tmp/build --specpath /tmp -F utility.py
+            OUT_FILE_NAME: utility
             ASSET_MIME: application/vnd.microsoft.portable-executable
 
     steps:
