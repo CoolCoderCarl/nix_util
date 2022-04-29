@@ -67,7 +67,7 @@ jobs:
         include:
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD: python3.7 -m PyInstaller --workpath /tmp/build --specpath /tmp -F utility.py
+            CMD_BUILD: python -m PyInstaller --workpath /tmp/build --specpath /tmp -F utility.py
             OUT_FILE_NAME: utility.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
 
