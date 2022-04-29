@@ -62,8 +62,8 @@ jobs:
         include:
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD: python3.7 -m PyInstaller --workpath /tmp/build --specpath /tmp -F utility.py
-            OUT_FILE_NAME: clipster.exe
+            CMD_BUILD: pyinstaller -F -w -n utility utility.py
+            OUT_FILE_NAME: utility.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
 
     steps:
