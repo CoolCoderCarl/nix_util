@@ -30,11 +30,7 @@ jobs:
           isort --check .
 
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ 'windows-latest', 'ubuntu-latest' ]
+    runs-on: 'ubuntu-latest'
 
     steps:
     - uses: actions/checkout@v2
@@ -47,7 +43,23 @@ jobs:
       with:
         path: .
 
-    - uses: actions/upload-artifact@v2
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
       with:
-        name: utility
-        path: .
+        name: utility-nix
+        path: src/linux
+        retention-days: 1
+
+
+    - name: Package Application
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        path: src
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: utility-win
+        path: dist/windows
+        retention-days: 1
+
