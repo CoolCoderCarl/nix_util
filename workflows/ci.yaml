@@ -40,9 +40,12 @@ jobs:
       with:
         python-version: 3.7
 
-    - run: pip install -r requirements.txt pyinstaller
-    - run: python3.7 -m PyInstaller --workpath /tmp/build --specpath /tmp -F utility.py
-    - ./dist/your-code/your-code
+    - name: Package Application
+      uses: JackMcKew/pyinstaller-action-linux@main
+      with:
+        path: .
+
     - uses: actions/upload-artifact@v2
       with:
-        path: dist/*
+        name: utility
+        path: src/
