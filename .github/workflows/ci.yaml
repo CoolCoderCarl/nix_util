@@ -47,19 +47,19 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: utility-nix
-        path: src/linux
+        path: .
         retention-days: 1
 
 
     - name: Package Application
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
-        path: src
+        path: .
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: utility-win
-        path: dist/windows
+        path: .
         retention-days: 1
 
