@@ -105,7 +105,7 @@ jobs:
           echo ::set-output name=upload_url::$value
           
       - name: Upload Release Asset
-        id: upload-release-asset
+        id: upload_release_asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPOS_TOKEN  }}
@@ -129,7 +129,7 @@ jobs:
           message: |
             ${{ github.actor }} created commit:
 
-            Commit with tag: ${{ join(needs.createrelease.steps.tag_version.outputs.*, '\n') }}
+            Commit with tag: ${{ needs.createrelease.steps.tag_version.outputs.tag_name }}
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref }}
 
