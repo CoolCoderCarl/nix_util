@@ -54,7 +54,7 @@ jobs:
 
       - name: Set tag version to output
         id: set_current_tag_id
-        run: echo "::set-output name=current_tag::${{ steps.tag_version.outputs.new_tag }}"
+        run: echo "::set-output name=current_tag::test"
 
       - name: Output Release URL File
         run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
