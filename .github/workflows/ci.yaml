@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: code_quality
     outputs:
-      get_current_tag: ${{ steps.set_current_tag_id.current_tag }}
+      get_current_tag: ${{ steps.set_current_tag_id.outputs.current_tag }}
     steps:
       - uses: actions/checkout@v2
       - name: Bump version and push tag
@@ -54,7 +54,7 @@ jobs:
 
       - name: Set tag version to output
         id: set_current_tag_id
-        run: echo "::set-output name=current_tag::test"
+        run: echo "::set-output name=current_tag::${{ steps.tag_version.outputs.new_tag }}"
 
       - name: Output Release URL File
         run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
