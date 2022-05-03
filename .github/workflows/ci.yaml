@@ -29,10 +29,12 @@ jobs:
         run:
           isort --check .
 
-  createrelease:
+  release:
     name: Create Release
     runs-on: ubuntu-latest
     needs: code_quality
+    outputs:
+      get_current_tag: ${{ set_current_tag_id.current_tag }}
     steps:
       - uses: actions/checkout@v2
       - name: Bump version and push tag
@@ -51,7 +53,7 @@ jobs:
           release_name: Release ${{ steps.tag_version.outputs.new_tag }}
 
       - name: Set tag version to output
-        id: current_tag_id
+        id: set_current_tag_id
         run: echo "::set-output name=current_tag::${{ steps.tag_version.outputs.new_tag }}"
 
       - name: Output Release URL File
@@ -65,7 +67,7 @@ jobs:
 
   build:
     name: Build packages
-    needs: createrelease
+    needs: release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -122,7 +124,7 @@ jobs:
   telegram:
     runs-on: ubuntu-latest
     name: Notification
-    needs: [ createrelease, build ]
+    needs: [ release, build ]
 
     steps:
       - name: Notify telegram message after Released
@@ -133,7 +135,7 @@ jobs:
           message: |
             ${{ github.actor }} created commit:
 
-            Commit with tag: ${{ needs.createrelease.current_tag_id.current_tag }}
+            Commit with tag: ${{ needs.release.outputs.get_current_tag }}
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref }}
 
