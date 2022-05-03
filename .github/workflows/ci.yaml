@@ -129,7 +129,7 @@ jobs:
           message: |
             ${{ github.actor }} created commit:
 
-            Commit with tag: ${{ join(needs.createrelease.tag_version.outputs.*, '\n') }}
+            Commit with tag: ${{ join(needs.createrelease.steps.tag_version.outputs.*, '\n') }}
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref }}
 
