@@ -117,7 +117,7 @@ jobs:
   telegram:
     runs-on: ubuntu-latest
     name: Notification
-    needs: createrelease
+    needs: [ createrelease, build]
 
     steps:
       - name: Notify telegram message after Released
@@ -128,7 +128,7 @@ jobs:
           message: |
             ${{ github.actor }} created commit:
 
-            Commit with tag: ${{ needs.createrelease.tag_version.outputs.new_tag }}
+            Commit with tag: ${{ join(needs.createrelease.tag_version.outputs.*, '\n') }}
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref }}
 
