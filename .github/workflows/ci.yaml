@@ -120,7 +120,7 @@ jobs:
     needs: createrelease
 
     steps:
-      - name: Notify in telegram after image was pushed
+      - name: Notify telegram message after Released
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT }}
