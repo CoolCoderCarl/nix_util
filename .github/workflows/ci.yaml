@@ -50,6 +50,10 @@ jobs:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           release_name: Release ${{ steps.tag_version.outputs.new_tag }}
 
+      - name: Set tag version to output
+        id: current_tag_id
+        run: echo "::set-output name=current_tag::${{ steps.tag_version.outputs.new_tag }}"
+
       - name: Output Release URL File
         run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
 
@@ -79,10 +83,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - name: Set up Python 3.7
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
@@ -129,7 +133,7 @@ jobs:
           message: |
             ${{ github.actor }} created commit:
 
-            Commit with tag: ${{ needs.createrelease.steps.tag_version.outputs.tag_name }}
+            Commit with tag: ${{ needs.createrelease.current_tag_id.current_tag }}
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref }}
 
