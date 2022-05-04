@@ -2,14 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [ master, develop ]
-  pull_request:
-    branches: [ master, develop ]
+    branches: [ master ]
 
 jobs:
   code_quality:
     runs-on: ubuntu-latest
-    name: Checks with black, isort
+    name: Checks with blacks, isort
     container: python:3.9
 
     steps:
@@ -29,11 +27,13 @@ jobs:
         run:
           isort --check .
 
+
   release:
     name: Create Release
     runs-on: ubuntu-latest
     needs: code_quality
     outputs:
+      get_release_url: ${{ steps.set_release_url.outputs.release_url }}
       get_current_tag: ${{ steps.set_current_tag_id.outputs.current_tag }}
     steps:
       - uses: actions/checkout@v2
@@ -52,19 +52,14 @@ jobs:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           release_name: Release ${{ steps.tag_version.outputs.new_tag }}
 
+      - name: Set Release URL
+        id: set_release_url
+        run: echo "::set-output name=release_url::${{ steps.create_release.outputs.upload_url }}"
+
       - name: Set tag version to output
         id: set_current_tag_id
         run: echo "::set-output name=current_tag::${{ steps.tag_version.outputs.new_tag }}"
 
-      - name: Output Release URL File
-        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
-
-      - name: Save Release URL File for publish
-        uses: actions/upload-artifact@v3
-        with:
-          name: release_url
-          path: release_url.txt
-          retention-days: 1
 
   build:
     name: Build packages
@@ -85,7 +80,7 @@ jobs:
             ASSET_MIME: application/x-binary
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -95,32 +90,26 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Build with pyinstaller for ${{ matrix.TARGET }}
         run: ${{ matrix.CMD_BUILD }}
 
-      - name: Load Release URL File from release job
-        uses: actions/download-artifact@v1
+      - uses: actions/upload-artifact@v3
         with:
-          name: release_url
+          name: ${{ matrix.OUT_FILE_NAME }}
+          path: ./dist/${{ matrix.OUT_FILE_NAME }}
+          retention-days: 1
 
-      - name: Get Release File Name & Upload URL
-        id: get_release_info
-        shell: bash
-        run: |
-          value=`cat release_url/release_url.txt`
-          echo ::set-output name=upload_url::$value
-          
       - name: Upload Release Asset
-        id: upload_release_asset
+        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.REPOS_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          upload_url: ${{ needs.release.outputs.get_release_url }}
           asset_path: ./dist/${{ matrix.OUT_FILE_NAME }}
           asset_name: ${{ matrix.OUT_FILE_NAME }}
           asset_content_type: ${{ matrix.ASSET_MIME }}
+
 
   telegram:
     runs-on: ubuntu-latest
@@ -139,5 +128,7 @@ jobs:
             Commit with tag: ${{ needs.release.outputs.get_current_tag }}
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref }}
+
+            Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ needs.release.outputs.get_current_tag }}
 
             See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
