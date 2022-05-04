@@ -131,4 +131,4 @@ jobs:
 
             Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ needs.release.outputs.get_current_tag }}
 
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            See changes: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
