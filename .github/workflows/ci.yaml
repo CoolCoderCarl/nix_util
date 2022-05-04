@@ -137,7 +137,7 @@ jobs:
             ${{ github.actor }} created commit:
 
             Commit with tag: ${{ needs.release.outputs.get_current_tag }}
-            Repository: ${{ github.repository }}
+            Repository: #${{ github.repository }}
             Branch: ${{ github.ref }}
 
             See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
