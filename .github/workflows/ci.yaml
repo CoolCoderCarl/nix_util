@@ -64,7 +64,7 @@ jobs:
         with:
           name: release_url
           path: release_url.txt
-          retention-days: 5
+          retention-days: 1
 
   build:
     name: Build packages
