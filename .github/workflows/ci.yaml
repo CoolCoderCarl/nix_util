@@ -59,6 +59,18 @@ jobs:
       - name: Set tag version to output
         id: set_current_tag_id
         run: echo "::set-output name=current_tag::${{ steps.tag_version.outputs.new_tag }}"
+        
+      - name: Step To run on failure
+        if: ${{ failure() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: html
+          message: |
+            <b>!!! FAILED !!!</b>
+            <b>Failed job:</b> https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            See changes: https://github.com/${{ github.repository }}/commit/${{ github.sha }}        
 
 
   build:
@@ -109,6 +121,18 @@ jobs:
           asset_path: ./dist/${{ matrix.OUT_FILE_NAME }}
           asset_name: ${{ matrix.OUT_FILE_NAME }}
           asset_content_type: ${{ matrix.ASSET_MIME }}
+          
+      - name: Step To run on failure
+        if: ${{ failure() }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: html
+          message: |
+            <b>!!! FAILED !!!</b>
+            <b>Failed job:</b> https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            See changes: https://github.com/${{ github.repository }}/commit/${{ github.sha }}          
 
 
   telegram:
